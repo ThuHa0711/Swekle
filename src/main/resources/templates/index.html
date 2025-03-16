@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<style>
+
+    ::after,
+    ::before {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    h1 {
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+
+    .wrapper {
+        display: flex;
+    }
+
+    .main {
+        min-height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        transition: all 0.35s ease-in-out;
+        background-color: #fafbfe;
+        margin-left: 70px; /* Đảm bảo nội dung không bị che khuất khi sidebar thu nhỏ */
+        padding-top: 20px;
+    }
+
+    #sidebar.expand ~ .main {
+        margin-left: 260px; /* Khi sidebar mở rộng, nội dung sẽ di chuyển sang phải */
+    }
+
+
+    #sidebar {
+        position: fixed; /* Cố định sidebar */
+        top: 0; /* Đặt sidebar ở trên cùng */
+        left: 0;
+        width: 70px;
+        min-width: 70px;
+        height: 100vh;
+        z-index: 1000;
+        transition: all .25s ease-in-out;
+        background-color: #0e2238;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #sidebar.expand {
+        width: 260px;
+        min-width: 260px;
+    }
+
+    .toggle-btn {
+        background-color: transparent;
+        cursor: pointer;
+        border: 0;
+        padding: 1rem 1.5rem;
+    }
+
+    .toggle-btn i {
+        font-size: 1.5rem;
+        color: #FFF;
+    }
+
+    .sidebar-logo {
+        margin: auto 0;
+    }
+
+    .sidebar-logo a {
+        color: #FFF;
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    #sidebar:not(.expand) .sidebar-logo,
+    #sidebar:not(.expand) a.sidebar-link span {
+        display: none;
+    }
+
+    .sidebar-nav {
+        padding: 2rem 0;
+        flex: 1 1 auto;
+    }
+
+    a.sidebar-link {
+        padding: .625rem 1.625rem;
+        color: #FFF;
+        display: block;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        border-left: 3px solid transparent;
+    }
+
+    .sidebar-link i {
+        font-size: 1.1rem;
+        margin-right: .75rem;
+    }
+
+    a.sidebar-link:hover {
+        background-color: rgba(255, 255, 255, .075);
+        border-left: 3px solid #3b7ddd;
+    }
+
+    .sidebar-item {
+        position: relative;
+    }
+
+    #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
+        position: absolute;
+        top: 0;
+        left: 70px;
+        background-color: #0e2238;
+        padding: 0;
+        min-width: 15rem;
+        display: none;
+    }
+
+    #sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown {
+        display: block;
+        max-height: 15em;
+        width: 100%;
+        opacity: 1;
+    }
+
+    #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
+        border: solid;
+        border-width: 0 .075rem .075rem 0;
+        content: "";
+        display: inline-block;
+        padding: 2px;
+        position: absolute;
+        right: 1.5rem;
+        top: 1.4rem;
+        transform: rotate(-135deg);
+        transition: all .2s ease-out;
+    }
+
+    #sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+        transform: rotate(45deg);
+        transition: all .2s ease-out;
+    }
+
+    a img{
+        width: 60%;
+        height: auto;
+        margin-left: 25px;
+    }
+
+    .sidebar-link {
+        text-decoration: none; /* Loại bỏ gạch chân */
+    }
+
+    /* Đảm bảo khi liên kết được nhấn hoặc có trạng thái focus, vẫn không có gạch chân */
+    .sidebar-link:active, .sidebar-link:focus {
+        text-decoration: none;
+    }
+
+</style>
+
+<body>
+<div class="wrapper">
+    <aside id="sidebar">
+        <div class="d-flex">
+            <div class="sidebar-logo">
+                <a href=""><img src="/img/logo_swekle.png" alt=""></a>
+            </div>
+            <button class="toggle-btn" type="button">
+                <i class="bi bi-grid"></i>
+            </button>
+
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-url="/swekle/ban-hang/hien-thi">
+                    <i class="bi bi-cart-fill"></i>
+                    <span>Bán hàng tại quầy</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-url="/swekle/hoa-don/hien-thi">
+                    <i class="bi bi-receipt-cutoff"></i>
+                    <span>Hóa đơn</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#product-management" aria-expanded="false" aria-controls="product-management" data-url="/swekle/san-pham/hien-thi">
+                    <i class="bi bi-bag-fill"></i>
+                    <span>Quản lý sản phẩm</span>
+                </a>
+                <ul id="product-management" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/san-pham/hien-thi">Sản phẩm</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/danh-muc/hien-thi">Danh mục</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/mau-sac/hien-thi">Màu sắc</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/size/hien-thi">Size</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/chat-lieu/hien-thi">Chất liệu</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#account-management" aria-expanded="false" aria-controls="account-management" data-url="/swekle/nhan-vien/hien-thi">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Quản lý tài khoản</span>
+                </a>
+                <ul id="account-management" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/nhan-vien/hien-thi">Nhân viên</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" data-url="/swekle/khach-hang/hien-thi">Khách hàng</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-bar-chart-line-fill"></i>
+                    <span>Thống kê</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Đăng xuất</span>
+            </a>
+        </div>
+    </aside>
+    <div class="main p-3">
+            <div id="content-placeholder">
+
+            </div>
+    </div>
+</div>
+
+<script>
+    const s = document.querySelector(".toggle-btn");
+    s.addEventListener("click", function () {
+        document.querySelector("#sidebar").classList.toggle("expand");
+    });
+
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Ngừng hành vi mặc định của liên kết (reload trang)
+
+            const newUrl = this.getAttribute('data-url');
+            history.pushState(null, null, newUrl);
+
+            fetch(newUrl)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('content-placeholder').innerHTML = html;
+                    handleSidebarLinks();  // If needed to re-attach event listeners to the new content
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra khi tải HTML:', error);
+                });
+        });
+    });
+
+
+    function handleSidebarLinks() {
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const newUrl = this.getAttribute('data-url');
+                history.pushState(null, null, newUrl);
+                fetch(newUrl)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content-placeholder').innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error while fetching content:', error);
+                    });
+            });
+        });
+    }
+
+
+
+
+    window.onload = function() {
+        document.querySelector("#sidebar").classList.add("expand"); // Đảm bảo sidebar luôn mở khi trang tải
+        loadDefaultContent(); // Tải nội dung mặc định của đường dẫn
+    };
+
+    function loadDefaultContent() {
+        const defaultUrl = '/swekle/san-pham/hien-thi';  // Đường dẫn mặc định
+        history.pushState(null, null, defaultUrl);  // Cập nhật URL mà không reload trang
+
+        fetch(defaultUrl)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('content-placeholder').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra khi tải nội dung mặc định:', error);
+            });
+    }
+
+
+
+    function handleThymeleafLinks() {
+        // Xử lý các liên kết <a href="...">
+        document.querySelectorAll('a[href]').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();  // Ngừng hành vi mặc định của liên kết (reload trang)
+
+                const newUrl = this.getAttribute('href'); // Lấy giá trị href
+                if (newUrl) {
+                    history.pushState(null, null, newUrl);  // Cập nhật URL mà không reload trang
+
+                    fetch(newUrl)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content-placeholder').innerHTML = html; // Cập nhật nội dung
+                            handleThymeleafLinks(); // Đảm bảo các liên kết href mới tải vào vẫn hoạt động
+                        })
+                        .catch(error => {
+                            console.error('Có lỗi xảy ra khi tải nội dung:', error);
+                        });
+                }
+            });
+        });
+
+        // Xử lý các biểu mẫu <form action="...">
+        document.querySelectorAll('form[action]').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();  // Ngừng hành vi mặc định của form (submit)
+
+                const actionUrl = this.getAttribute('action'); // Lấy giá trị action
+                const formData = new FormData(this); // Thu thập dữ liệu form
+
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content-placeholder').innerHTML = html; // Cập nhật nội dung
+                        handleThymeleafLinks(); // Đảm bảo các liên kết href mới tải vào vẫn hoạt động
+                    })
+                    .catch(error => {
+                        console.error('Có lỗi xảy ra khi gửi biểu mẫu:', error);
+                    });
+            });
+        });
+        // Xử lý th:href trong các liên kết
+        document.querySelectorAll('a[th\\:href]').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();  // Ngừng hành vi mặc định của liên kết (reload trang)
+
+                const newUrl = this.getAttribute('th:href'); // Lấy giá trị th:href
+                if (newUrl) {
+                    history.pushState(null, null, newUrl);  // Cập nhật URL mà không reload trang
+
+                    fetch(newUrl)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content-placeholder').innerHTML = html; // Cập nhật nội dung
+                            handleThymeleafLinks(); // Đảm bảo các liên kết th:href mới tải vào vẫn hoạt động
+                        })
+                        .catch(error => {
+                            console.error('Có lỗi xảy ra khi tải nội dung:', error);
+                        });
+                }
+            });
+        });
+
+        // Xử lý th:action trong các biểu mẫu (form)
+        document.querySelectorAll('form[th\\:action]').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();  // Ngừng hành vi mặc định của form (submit)
+
+                const actionUrl = this.getAttribute('th:action'); // Lấy giá trị th:action
+                const formData = new FormData(this); // Thu thập dữ liệu form
+
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content-placeholder').innerHTML = html; // Cập nhật nội dung
+                        handleThymeleafLinks(); // Đảm bảo các liên kết th:href mới tải vào vẫn hoạt động
+                    })
+                    .catch(error => {
+                        console.error('Có lỗi xảy ra khi gửi biểu mẫu:', error);
+                    });
+            });
+        });
+    }
+
+    // Gọi hàm này sau khi nội dung đã được tải vào
+    document.addEventListener('DOMContentLoaded', function() {
+
+        handleThymeleafLinks(); // Đảm bảo các liên kết th:href và th:action đều hoạt động ngay khi trang tải
+    });
+</script>
+</body>
+</html>

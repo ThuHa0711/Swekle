@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<style>
+    a{
+        margin: 10px;
+    }
+
+    .form-text {
+        color: red;
+    }
+    .valid-feedback{
+        color: red;
+    }
+</style>
+<body class="container">
+<h4 class="mb-3">Danh sách chất liệu</h4>
+<!--<form action="/swekle/chat-lieu/search" method="get">-->
+<!--    <div class="row">-->
+<!--        <div class="col-md-6">-->
+<!--            <input type="text" name="tim" class="form-control">-->
+<!--        </div>-->
+<!--        <div class="col-md-6">-->
+<!--            <label class="form-label">Trạng thái</label>-->
+<!--            <div class="form-check">-->
+<!--                <input class="form-check-input" type="radio" value="true" name="trangThai">-->
+<!--                <label class="form-check-label">-->
+<!--                    Hoạt động-->
+<!--                </label>-->
+<!--            </div>-->
+<!--            <div class="form-check">-->
+<!--                <input class="form-check-input" type="radio" value="false" name="trangThai">-->
+<!--                <label class="form-check-label">-->
+<!--                    Không hoạt động-->
+<!--                </label>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <button type="submit" class="btn btn-primary">Tìm kiếm</button>-->
+<!--</form>-->
+<button type="submit" class="btn btn-success float-right" data-bs-toggle="modal" data-bs-target="#addMaterialModal"><i class="bi bi-plus-lg"></i>Thêm chất liệu</button>
+<div class="modal fade" id="addMaterialModal" tabindex="-1" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMaterialModalLabel">Thêm chất liệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form thêm chất liệu -->
+                <form action="/swekle/chat-lieu/add" method="POST" th:object="${chatLieu}">
+                    <div class="mb-3">
+                        <label class="form-label">Mã chất liệu</label>
+                        <input type="text" class="form-control" th:field="*{maCL}">
+                        <div class="form-text" th:errors="*{maCL}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tên chất liệu</label>
+                        <input type="text" class="form-control" th:field="*{tenCL}">
+                        <div class="form-text" th:errors="*{tenCL}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="true" th:field="*{trangThai}" checked>
+                            <label class="form-check-label">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="false" th:field="*{trangThai}" disabled>
+                            <label class="form-check-label">
+                                Không hoạt động
+                            </label>
+                        </div>
+                        <div class="form-text" th:errors="*{trangThai}"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Mã chất liệu</th>
+        <th>Tên chất liệu</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chatLieu : ${listChatLieu}">
+        <td th:text="${chatLieu.id}"></td>
+        <td th:text="${chatLieu.maCL}"></td>
+        <td th:text="${chatLieu.tenCL}"></td>
+        <td th:text="${chatLieu.trangThai ? 'Hoạt động' : 'Không hoạt động'}"></td>
+        <td>
+            <a th:href="@{|/swekle/chat-lieu/view-update/${chatLieu.id}|}"><i class="bi bi-pencil-square" style="color: #FFCA2C"></i></a>
+            <a th:href="@{|/swekle/chat-lieu/delete/${chatLieu.id}|}"><i class="bi bi-trash3-fill" style="color: #DC3545"></i></a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addMaterialModal = document.getElementById('addMaterialModal');
+        const updateMaterialModal = document.getElementById('updateMaterialModal');
+
+        // Nếu có lỗi trong modal thêm (form-text), mở modal thêm
+        if (addMaterialModal && document.querySelectorAll(".form-text").length > 0) {
+            var modal = new bootstrap.Modal(addMaterialModal);
+            modal.show();
+        }
+
+        // Nếu có lỗi trong modal sửa (valid-feedback), mở modal sửa
+        else if (updateMaterialModal && document.querySelectorAll(".valid-feedback").length > 0) {
+            var modal = new bootstrap.Modal(updateMaterialModal);
+            modal.show();
+        }
+    });
+
+
+    //tranh mat aside
+    // Khi form được submit
+    document.getElementById('addMaterialForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Ngừng hành động mặc định (gửi form)
+
+        const formData = new FormData(this); // Lấy dữ liệu form
+
+        // Gửi yêu cầu AJAX
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json()) // Giả sử server trả về JSON
+            .then(data => {
+                // Xử lý dữ liệu trả về từ server (Ví dụ: hiển thị thông báo thành công)
+                console.log('Thêm chất liệu thành công!', data);
+
+                // Đóng modal sau khi thêm thành công
+                var modal = new bootstrap.Modal(document.getElementById('addMaterialModal'));
+                modal.hide();
+
+                // Cập nhật lại phần nội dung mà không reload trang
+                // (Tuỳ thuộc vào cấu trúc của bạn, bạn có thể thêm code để cập nhật nội dung trang)
+            })
+            .catch(error => {
+                console.error('Có lỗi khi thêm chất liệu:', error);
+            });
+    });
+
+</script>
+
+</body>
+</html>
