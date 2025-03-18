@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="hoaDon : ${listHD}">
+            <tr th:each="hoaDon : ${hoaDonPage.content}">
                 <td th:text="${hoaDon.id}"></td>
                 <td th:text="${hoaDon.maHD}"></td>
                 <td th:text="${hoaDon.khachHang.hoTen}"></td>
@@ -38,6 +38,39 @@
             </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <!-- Nút trang đầu -->
+                <li class="page-item" th:classappend="${hoaDonPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=0|}">Đầu</a>
+                </li>
+
+                <!-- Nút trang trước -->
+                <li class="page-item" th:classappend="${hoaDonPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hoaDonPage.number - 1}|}">Trước</a>
+                </li>
+
+                <!-- Hiển thị số trang -->
+                <li th:each="i : ${#numbers.sequence(hoaDonPage.number,
+            (hoaDonPage.number == hoaDonPage.totalPages - 1) ? hoaDonPage.number :
+            (hoaDonPage.number + 2 > hoaDonPage.totalPages - 1 ? hoaDonPage.totalPages - 1 : hoaDonPage.number + 2))}"
+                    th:classappend="${(i < 0 || i >= hoaDonPage.totalPages) ? 'disabled' : (i == hoaDonPage.number ? 'active' : '')}"
+                    class="page-item">
+                    <a th:href="@{|/swekle/ban-hang/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+                </li>
+
+                <!-- Nút trang sau -->
+                <li class="page-item" th:classappend="${hoaDonPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hoaDonPage.number + 1}|}">Sau</a>
+                </li>
+
+                <!-- Nút trang cuối -->
+                <li class="page-item" th:classappend="${hoaDonPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hoaDonPage.totalPages - 1}|}">Cuối</a>
+                </li>
+            </ul>
+        </div>
+        <br>
         <h4 class="mb-3">Danh sách sản phẩm trong hóa đơn</h4>
         <table class="table table-hover">
             <thead>
@@ -54,8 +87,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="hdct : ${listHDCT}">
-                <td th:text="${hdct.id}"></td>
+            <tr th:each="hdct : ${hdctPage.content}">
+                <td th:text="${hdct.chiTietSanPham.id}"></td>
                 <td th:text="${hdct.chiTietSanPham.tenSP}"></td>
                 <td th:text="${hdct.chiTietSanPham.tenMau}"></td>
                 <td th:text="${hdct.chiTietSanPham.tenSize}"></td>
@@ -69,6 +102,39 @@
             </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <!-- Nút trang đầu -->
+                <li class="page-item" th:classappend="${hdctPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=0|}">Đầu</a>
+                </li>
+
+                <!-- Nút trang trước -->
+                <li class="page-item" th:classappend="${hdctPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hdctPage.number - 1}|}">Trước</a>
+                </li>
+
+                <!-- Hiển thị số trang -->
+                <li th:each="i : ${#numbers.sequence(hdctPage.number,
+            (hdctPage.number == hdctPage.totalPages - 1) ? hdctPage.number :
+            (hdctPage.number + 2 > hdctPage.totalPages - 1 ? hdctPage.totalPages - 1 : hdctPage.number + 2))}"
+                    th:classappend="${(i < 0 || i >= hdctPage.totalPages) ? 'disabled' : (i == hdctPage.number ? 'active' : '')}"
+                    class="page-item">
+                    <a th:href="@{|/swekle/ban-hang/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+                </li>
+
+                <!-- Nút trang sau -->
+                <li class="page-item" th:classappend="${hdctPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hdctPage.number + 1}|}">Sau</a>
+                </li>
+
+                <!-- Nút trang cuối -->
+                <li class="page-item" th:classappend="${hdctPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${hdctPage.totalPages - 1}|}">Cuối</a>
+                </li>
+            </ul>
+        </div>
+        <br>
         <h4 class="mb-3">Danh sách sản phẩm</h4>
         <table class="table table-hover">
             <thead>
@@ -84,7 +150,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ctsp : ${listCTSP}">
+            <tr th:each="ctsp : ${ctspPage.content}">
                 <td th:text="${ctsp.id}"></td>
                 <td th:text="${ctsp.sanPham.tenSP}"></td>
                 <td th:text="${ctsp.mauSac.tenMau}"></td>
@@ -93,36 +159,99 @@
                 <td th:text="${ctsp.convertGiaBan}"></td>
                 <td th:text="${ctsp.soLuongTon}"></td>
                 <td>
-                    <a href="#" class="btn btn-primary"><i class="bi bi-cart-plus"></i>Mua</a>
+                    <a href="#" class="btn btn-primary" th:onclick="|return submitInput('${ctsp.id}')|"><i class="bi bi-cart-plus"></i>Mua</a>
                 </td>
             </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <!-- Nút trang đầu -->
+                <li class="page-item" th:classappend="${ctspPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=0|}">Đầu</a>
+                </li>
+
+                <!-- Nút trang trước -->
+                <li class="page-item" th:classappend="${ctspPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${ctspPage.number - 1}|}">Trước</a>
+                </li>
+
+                <!-- Hiển thị số trang -->
+                <li th:each="i : ${#numbers.sequence(ctspPage.number,
+            (ctspPage.number == ctspPage.totalPages - 1) ? ctspPage.number :
+            (ctspPage.number + 2 > ctspPage.totalPages - 1 ? ctspPage.totalPages - 1 : ctspPage.number + 2))}"
+                    th:classappend="${(i < 0 || i >= ctspPage.totalPages) ? 'disabled' : (i == ctspPage.number ? 'active' : '')}"
+                    class="page-item">
+                    <a th:href="@{|/swekle/ban-hang/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+                </li>
+
+                <!-- Nút trang sau -->
+                <li class="page-item" th:classappend="${ctspPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${ctspPage.number + 1}|}">Sau</a>
+                </li>
+
+                <!-- Nút trang cuối -->
+                <li class="page-item" th:classappend="${ctspPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{|/swekle/ban-hang/hien-thi?page=${ctspPage.totalPages - 1}|}">Cuối</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="col-4">
         <h4 class="mb-3">Tạo hóa đơn</h4>
-        <form action="/swekle/ban-hang/tao-hoa-don" method="get" th:object="${hoaDon}">
-            <div class="mb-3">
-                <label class="form-label">Id hóa đơn</label>
-                <input type="text" class="form-control" th:field="*{id}">
+        <div class="card">
+            <div class="card-body">
+                <form action="/swekle/ban-hang/tao-hoa-don" method="get" th:object="${hoaDon}">
+                    <div class="mb-3">
+                        <label class="form-label">Tên khách hàng</label>
+                        <select class="form-select" name="khachHang" th:field="*{khachHang.id}">
+                            <option th:each="khachHang : ${listKH}"
+                                    th:value="${khachHang.id}"
+                                    th:text="${khachHang.hoTen}"
+                                    selected></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mã hóa đơn</label>
+                        <input type="text" class="form-control" th:field="*{maHD}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày tạo</label>
+                        <input type="text" class="form-control" th:field="*{ngayTao}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tổng tiền</label>
+                        <input type="number" class="form-control" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tiền khách đưa</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tiền thừa</label>
+                        <input type="number" class="form-control" disabled>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thanh toán</button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Tên khách hàng</label>
-                <select class="form-select" name="khachHang" th:field="*{khachHang.id}">
-                    <option th:each="khachHang : ${listKH}"
-                            th:value="${khachHang.id}"
-                            th:text="${khachHang.hoTen}"
-                            selected></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Tổng tiền</label>
-                <input type="number" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Thanh toán</button>
-        </form>
+        </div>
+
     </div>
 </div>
 
+<script>
+    function submitInput(id) {
+        console.log("da chay vao day " + id);
+        let soLuong = prompt("Nhap so luong can mua: ");
+        if (soLuong === null || soLuong.trim() === "") {
+            alert("Bạn chưa nhập dữ liệu!");
+            return false;
+        }
+        console.log(soLuong);
+        window.location.href = "/them-gio-hang?chiTietSanPham=" + encodeURIComponent(id)
+            + "&soLuong=" + encodeURIComponent(soLuong);
+        return false;
+    }
+</script>
 </body>
 </html>

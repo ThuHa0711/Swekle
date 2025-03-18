@@ -31,7 +31,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="sanPham : ${listSanPham}">
+    <tr th:each="sanPham : ${sanPhamPage.content}">
         <td th:text="${sanPham.id}"></td>
         <td th:text="${sanPham.maSP}"></td>
         <td th:text="${sanPham.tenSP}"></td>
@@ -45,9 +45,42 @@
         <td>
             <a th:href="@{|/swekle/san-pham/view-update/${sanPham.id}|}"><i class="bi bi-pencil-square" style="color: #FFCA2C"></i></a>
             <a th:href="@{|/swekle/san-pham/delete/${sanPham.id}|}"><i class="bi bi-trash3-fill" style="color: #DC3545"></i></a>
+            <a th:href="@{|/swekle/san-pham/chi-tiet/${sanPham.id}|}"><i class="bi bi-eye-fill" style="color: #0D6EFD"></i></a>
         </td>
     </tr>
     </tbody>
 </table>
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${sanPhamPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/san-pham/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${sanPhamPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/san-pham/hien-thi?page=${sanPhamPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(sanPhamPage.number,
+            (sanPhamPage.number == sanPhamPage.totalPages - 1) ? sanPhamPage.number :
+            (sanPhamPage.number + 2 > sanPhamPage.totalPages - 1 ? sanPhamPage.totalPages - 1 : sanPhamPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= sanPhamPage.totalPages) ? 'disabled' : (i == sanPhamPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/san-pham/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${sanPhamPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/san-pham/hien-thi?page=${sanPhamPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${sanPhamPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/san-pham/hien-thi?page=${sanPhamPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

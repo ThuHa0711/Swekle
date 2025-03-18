@@ -25,7 +25,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Form thêm chất liệu -->
                 <form action="/swekle/danh-muc/add" method="POST" th:object="${danhMuc}">
                     <div class="mb-3">
                         <label class="form-label">Mã danh mục</label>
@@ -70,7 +69,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="danhMuc : ${listDanhMuc}">
+    <tr th:each="danhMuc : ${danhMucPage.content}">
         <td th:text="${danhMuc.id}"></td>
         <td th:text="${danhMuc.maDanhMuc}"></td>
         <td th:text="${danhMuc.tenDanhMuc}"></td>
@@ -82,5 +81,74 @@
     </tr>
     </tbody>
 </table>
+
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${danhMucPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/danh-muc/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${danhMucPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/danh-muc/hien-thi?page=${danhMucPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(danhMucPage.number,
+            (danhMucPage.number == danhMucPage.totalPages - 1) ? danhMucPage.number :
+            (danhMucPage.number + 2 > danhMucPage.totalPages - 1 ? danhMucPage.totalPages - 1 : danhMucPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= danhMucPage.totalPages) ? 'disabled' : (i == danhMucPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/danh-muc/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${danhMucPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/danh-muc/hien-thi?page=${danhMucPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${danhMucPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/danh-muc/hien-thi?page=${danhMucPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addMaterialModal = document.getElementById('addMaterialModal');
+        if (addMaterialModal && document.querySelectorAll(".form-text").length > 0) {
+            var modal = new bootstrap.Modal(addMaterialModal);
+            modal.show();
+        }
+
+    });
+
+
+    document.getElementById('addMaterialForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        // Gửi yêu cầu AJAX
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json()) // Giả sử server trả về JSON
+            .then(data => {
+                console.log('Thêm danh mục thành công!', data);
+
+                var modal = new bootstrap.Modal(document.getElementById('addMaterialModal'));
+                modal.hide();
+
+            })
+            .catch(error => {
+                console.error('Có lỗi khi thêm danh mục:', error);
+            });
+    });
+
+</script>
 </body>
 </html>

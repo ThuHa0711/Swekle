@@ -1,6 +1,8 @@
 package com.example.Swekle.repository;
 
 import com.example.Swekle.model.ChiTietSanPham;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,5 +17,7 @@ public interface ChiTietSanPhamRepo extends JpaRepository<ChiTietSanPham, Intege
             " inner join mau_sac ms on ctsp.id_mau_sac = ms.id" +
             " inner join chat_lieu cl on ctsp.id_chat_lieu = cl.id" +
             " inner join size s on ctsp.id_size = s.id", nativeQuery = true)
-    List<ChiTietSanPham> getCTSPInterface();
+    Page<ChiTietSanPham> getChiTietSanPhamWithPagination(Pageable pageable);
+
+
 }

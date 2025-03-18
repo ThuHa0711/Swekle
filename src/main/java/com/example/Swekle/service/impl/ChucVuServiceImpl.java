@@ -18,8 +18,4 @@ public class ChucVuServiceImpl implements ChucVuService {
         return chucVuRepo.getChucVuInterface();
     }
 
-    @Override
-    public void addCV(ChucVu chucVu){
-        chucVuRepo.save(chucVu);
-    }
 }

@@ -14,4 +14,6 @@ public interface SizeService {
     void updateSize(Size size);
 
     void deleteSize(Integer id);
+
+    List<Size> searchSize(String search);
 }

@@ -1,11 +1,12 @@
 package com.example.Swekle.service;
 
 import com.example.Swekle.model.NhanVien;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface NhanVienService {
-    List<NhanVien> getListNV();
+    Page<NhanVien> getListNV(int page, int size);
 
     void addNV(NhanVien nhanVien);
 

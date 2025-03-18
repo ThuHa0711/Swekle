@@ -16,11 +16,6 @@ public class MauSacServiceImpl implements MauSacService {
     @Autowired
     MauSacRepo mauSacRepo;
 
-//    @Override
-//    public List<MauSac> getListMS(){
-//        return mauSacRepo.getMauSacInterface();
-//    }
-
     @Override
     public Page<MauSac> getListMS(int page, int size){
         Pageable pageable = PageRequest.of(page, size);

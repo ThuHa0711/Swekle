@@ -30,7 +30,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ctsp : ${listCTSP}">
+    <tr th:each="ctsp : ${ctspPage.content}">
         <td th:text="${ctsp.id}"></td>
         <td th:text="${ctsp.sanPham.tenSP}"></td>
         <td th:text="${ctsp.mauSac.tenMau}"></td>
@@ -38,8 +38,6 @@
         <td th:text="${ctsp.giaBan}"></td>
         <td th:text="${ctsp.soLuongTon}"></td>
         <td th:text="${ctsp.trangThai ? 'Hoạt động' : 'Không hoạt động'}"></td>
-        <td th:text="${ctsp.ngaySua}"></td>
-        <td th:text="${ctsp.ngayTao}"></td>
         <td>
             <a th:href="@{|/swekle/ctsp/view-update/${ctsp.id}|}"><i class="bi bi-pencil-square" style="color: #FFCA2C"></i></a>
             <a th:href="@{|/swekle/ctsp/delete/${ctsp.id}|}"><i class="bi bi-trash3-fill" style="color: #DC3545"></i></a>
@@ -47,5 +45,39 @@
     </tr>
     </tbody>
 </table>
+
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${ctspPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chi-tiet-san-pham/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${ctspPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chi-tiet-san-pham/hien-thi?page=${ctspPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(ctspPage.number,
+            (ctspPage.number == ctspPage.totalPages - 1) ? ctspPage.number :
+            (ctspPage.number + 2 > ctspPage.totalPages - 1 ? ctspPage.totalPages - 1 : ctspPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= ctspPage.totalPages) ? 'disabled' : (i == ctspPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/chi-tiet-san-pham/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${ctspPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chi-tiet-san-pham/hien-thi?page=${ctspPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${ctspPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chi-tiet-san-pham/hien-thi?page=${ctspPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
+</div>
 </body>
 </html>

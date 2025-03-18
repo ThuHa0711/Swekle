@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface MauSacService {
-//    List<MauSac> getListMS();
 
     Page<MauSac> getListMS(int page, int size);
 

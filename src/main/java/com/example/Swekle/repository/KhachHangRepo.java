@@ -1,6 +1,8 @@
 package com.example.Swekle.repository;
 
 import com.example.Swekle.model.KhachHang;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +22,5 @@ public interface KhachHangRepo extends JpaRepository<KhachHang, Integer> {
             "      ,[trang_thai]\n" +
             "      ,[mat_khau]\n" +
             "  FROM [dbo].[khach_hang]", nativeQuery = true)
-    List<KhachHang> getKhachHangInterface();
+    Page<KhachHang> getKhachHangWithPagination(Pageable pageable);
 }

@@ -25,7 +25,6 @@ public class MauSacController {
 
     @GetMapping("/hien-thi")
     public String hienThi(@RequestParam(defaultValue = "0") int page, @ModelAttribute("mauSac") MauSac mauSac, Model model){
-//        model.addAttribute("listMauSac", mauSacService.getListMS());
         Page<MauSac> mauSacPage = mauSacService.getListMS(page, 5);
         model.addAttribute("mauSacPage", mauSacPage);
         return "/mau-sac.html";
@@ -39,7 +38,7 @@ public class MauSacController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("mauSac") @Valid MauSac mauSac, Errors errors, @RequestParam(defaultValue = "0") int page, Model model){
+    public String add(@Valid @ModelAttribute("mauSac") MauSac mauSac, @RequestParam(defaultValue = "0") int page, Errors errors, Model model){
         if (errors.hasErrors()){
             Page<MauSac> mauSacPage = mauSacService.getListMS(page, 5);
             model.addAttribute("mauSacPage", mauSacPage);
@@ -50,8 +49,14 @@ public class MauSacController {
         return "redirect:/swekle/mau-sac/hien-thi?page=" + page;
     }
 
+    @PostMapping("/update/{id}")
+    public String update(@RequestParam(defaultValue = "0") int page, MauSac mauSac){
+        mauSacService.updateMS(mauSac);
+        return "redirect:/swekle/mau-sac/hien-thi?page=" + page;
+    }
+
     @GetMapping("/search")
-    public String hienThiMauSac(@RequestParam(defaultValue = "0") int page,
+    public String search(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(value = "search", required = false) String search,
                                 Model model) {
         Page<MauSac> mauSacPage = mauSacService.searchMS(search, page, 5);
@@ -60,6 +65,7 @@ public class MauSacController {
         model.addAttribute("mauSac", new MauSac());
         return "/mau-sac.html";
     }
+
 
 
 }

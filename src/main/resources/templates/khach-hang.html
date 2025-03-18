@@ -20,6 +20,89 @@
 
 </div>
 <h4>Danh sách khách hàng</h4>
+<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMaterialModal"><i class="bi bi-plus-lg"></i>Thêm khách hàng</button>
+<div class="modal fade" id="addMaterialModal" tabindex="-1" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMaterialModalLabel">Thêm khách hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/swekle/khach-hang/add" method="POST" th:object="${khachHang}">
+                    <div class="mb-3">
+                        <label class="form-label">Mã khách hàng</label>
+                        <input type="text" class="form-control" th:field="*{maKH}">
+                        <div class="form-text" th:errors="*{maKH}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tên khách hàng</label>
+                        <input type="text" class="form-control" th:field="*{hoTen}">
+                        <div class="form-text" th:errors="*{hoTen}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" class="form-control" th:field="*{ngaySinh}">
+                        <div class="form-text" th:errors="*{ngaySinh}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giới tính</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="true" th:field="*{gioiTinh}">
+                            <label class="form-check-label">
+                                Nam
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="false" th:field="*{gioiTinh}">
+                            <label class="form-check-label">
+                                Nữ
+                            </label>
+                        </div>
+                        <div class="form-text" th:errors="*{gioiTinh}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-control" th:field="*{email}">
+                        <div class="form-text" th:errors="*{email}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" th:field="*{diaChi}">
+                        <div class="form-text" th:errors="*{diaChi}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SDT</label>
+                        <input type="text" class="form-control" th:field="*{sdt}">
+                        <div class="form-text" th:errors="*{sdt}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="true" th:field="*{trangThai}" checked>
+                            <label class="form-check-label">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="false" th:field="*{trangThai}" disabled>
+                            <label class="form-check-label">
+                                Không hoạt động
+                            </label>
+                        </div>
+                        <div class="form-text" th:errors="*{trangThai}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="text" class="form-control" th:field="*{matKhau}">
+                        <div class="form-text" th:errors="*{matKhau}"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <table class="table table-hover">
     <thead>
     <tr>
@@ -36,7 +119,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="khachHang : ${listKhachHang}">
+    <tr th:each="khachHang : ${khachHangPage.content}">
         <td th:text="${khachHang.id}"></td>
         <td th:text="${khachHang.maKH}"></td>
         <td th:text="${khachHang.hoTen}"></td>
@@ -50,9 +133,40 @@
             <a th:href="@{|/swekle/khach-hang/view-update/${khachHang.id}|}"><i class="bi bi-pencil-square" style="color: #FFCA2C"></i></a>
             <a th:href="@{|/swekle/khach-hang/delete/${khachHang.id}|}"><i class="bi bi-trash3-fill" style="color: #DC3545"></i></a>
         </td>
-
     </tr>
     </tbody>
 </table>
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${khachHangPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/khach-hang/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${khachHangPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/khach-hang/hien-thi?page=${khachHangPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(khachHangPage.number,
+            (khachHangPage.number == khachHangPage.totalPages - 1) ? khachHangPage.number :
+            (khachHangPage.number + 2 > khachHangPage.totalPages - 1 ? khachHangPage.totalPages - 1 : khachHangPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= khachHangPage.totalPages) ? 'disabled' : (i == khachHangPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/khach-hang/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${khachHangPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/khach-hang/hien-thi?page=${khachHangPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${khachHangPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/khach-hang/hien-thi?page=${khachHangPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

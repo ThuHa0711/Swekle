@@ -4,6 +4,9 @@ import com.example.Swekle.model.DanhMuc;
 import com.example.Swekle.repository.DanhMucRepo;
 import com.example.Swekle.service.DanhMucService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +17,15 @@ public class DanhMucServiceImpl implements DanhMucService {
     DanhMucRepo danhMucRepo;
 
     @Override
-    public List<DanhMuc> getListDM(){
-        return danhMucRepo.getDanhMucInterface();
+    public Page<DanhMuc> getListDM(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return danhMucRepo.getDanhMucWithPagination(pageable);
+    }
+
+    @Override
+    public Page<DanhMuc> searchDM(String search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return danhMucRepo.findBySearch(search, pageable);
     }
 
     @Override

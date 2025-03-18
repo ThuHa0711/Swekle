@@ -15,11 +15,11 @@
     <div class="row">
         <div class="col-md-4">
             <div class="mb-3">
-                <label>Mã NV</label>
+                <label>Mã nhân viên</label>
                 <input type="text" class="form-control" th:field="*{maNV}" disabled>
             </div>
             <div class="mb-3">
-                <label class="form-label">Họ tên NV</label>
+                <label class="form-label">Tên nhân viên</label>
                 <input type="text" class="form-control" th:field="*{hoTenNV}">
             </div>
             <div class="mb-3">
@@ -87,9 +87,15 @@
                     </label>
                 </div>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Mật khẩu</label>
+                <input type="text" class="form-control" th:field="*{matKhau}">
+                <div class="form-text" th:errors="*{matKhau}"></div>
+            </div>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Sửa</button>
+    <a th:href="@{|/swekle/nhan-vien/hien-thi|}" class="btn btn-success">Quay lại hiển thị</a>
 </form>
 </body>
 </html>

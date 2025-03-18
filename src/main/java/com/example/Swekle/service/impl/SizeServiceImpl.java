@@ -19,6 +19,11 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
+    public List<Size> searchSize(String search) {
+        return sizeRepo.findBySearch(search);
+    }
+
+    @Override
     public void addSize(Size size){
         sizeRepo.save(size);
     }

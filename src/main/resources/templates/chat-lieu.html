@@ -17,9 +17,7 @@
     .form-text {
         color: red;
     }
-    .valid-feedback{
-        color: red;
-    }
+
 </style>
 <body class="container">
 <h4 class="mb-3">Danh sách chất liệu</h4>
@@ -55,7 +53,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Form thêm chất liệu -->
                 <form action="/swekle/chat-lieu/add" method="POST" th:object="${chatLieu}">
                     <div class="mb-3">
                         <label class="form-label">Mã chất liệu</label>
@@ -100,7 +97,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="chatLieu : ${listChatLieu}">
+    <tr th:each="chatLieu : ${chatLieuPage.content}">
         <td th:text="${chatLieu.id}"></td>
         <td th:text="${chatLieu.maCL}"></td>
         <td th:text="${chatLieu.tenCL}"></td>
@@ -113,22 +110,47 @@
     </tbody>
 </table>
 
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${chatLieuPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chat-lieu/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${chatLieuPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chat-lieu/hien-thi?page=${chatLieuPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(chatLieuPage.number,
+            (chatLieuPage.number == chatLieuPage.totalPages - 1) ? chatLieuPage.number :
+            (chatLieuPage.number + 2 > chatLieuPage.totalPages - 1 ? chatLieuPage.totalPages - 1 : chatLieuPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= chatLieuPage.totalPages) ? 'disabled' : (i == chatLieuPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/chat-lieu/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${chatLieuPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chat-lieu/hien-thi?page=${chatLieuPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${chatLieuPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/chat-lieu/hien-thi?page=${chatLieuPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const addMaterialModal = document.getElementById('addMaterialModal');
-        const updateMaterialModal = document.getElementById('updateMaterialModal');
-
-        // Nếu có lỗi trong modal thêm (form-text), mở modal thêm
         if (addMaterialModal && document.querySelectorAll(".form-text").length > 0) {
             var modal = new bootstrap.Modal(addMaterialModal);
             modal.show();
         }
 
-        // Nếu có lỗi trong modal sửa (valid-feedback), mở modal sửa
-        else if (updateMaterialModal && document.querySelectorAll(".valid-feedback").length > 0) {
-            var modal = new bootstrap.Modal(updateMaterialModal);
-            modal.show();
-        }
     });
 
 

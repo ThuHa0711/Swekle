@@ -62,5 +62,6 @@ public class KhachHang {
     private Boolean trangThai;
 
     @Column(name = "mat_khau")
+    @NotBlank(message = "Mật khẩu không được để trống")
     private String matKhau;
 }

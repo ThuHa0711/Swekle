@@ -1,11 +1,12 @@
 package com.example.Swekle.service;
 
 import com.example.Swekle.model.DanhMuc;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface DanhMucService {
-    List<DanhMuc> getListDM();
+    Page<DanhMuc> getListDM(int page, int size);
 
     void addDM(DanhMuc danhMuc);
 
@@ -14,4 +15,6 @@ public interface DanhMucService {
     void updateDM(DanhMuc danhMuc);
 
     void deleteDM(Integer id);
+
+    Page<DanhMuc> searchDM(String search, int page, int size);
 }

@@ -10,29 +10,96 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="container">
-<table class="table table-hover">
+<h4 class="mb-3">Danh sách hóa đơn</h4>
+<form action="/swekle/hoa-don/search" method="get">
+    <div class="d-flex w-50">
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm hóa đơn theo mã HD, địa chỉ, tên KH, tên NV">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+    </div>
+    </form>
+    <br>
+<table class="table table-hover" id="hoa-don-table">
     <thead>
     <tr>
         <th>Id</th>
-        <th>Tên khách hàng</th>
-        <th>Trạng thái</th>
+        <th>Mã hóa đơn</th>
         <th>Ngày tạo</th>
-        <th>Ngày sửa</th>
         <th>Địa chỉ</th>
-        <th>SDT</th>
+        <th>Tên khách hàng</th>
+        <th>Tên nhân viên</th>
+        <th>Trạng thái</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="hoaDon : ${listHoaDon}">
+    <tr th:each="hoaDon : ${hoaDonPage.content}">
         <td th:text="${hoaDon.id}"></td>
-        <td th:text="${hoaDon.khachHang.hoTen}"></td>
-        <td th:text="${hoaDon.trangThai}"></td>
+        <td th:text="${hoaDon.maHD}"></td>
         <td th:text="${hoaDon.ngayTao}"></td>
-        <td th:text="${hoaDon.ngaySua}"></td>
         <td th:text="${hoaDon.diaChi}"></td>
-        <td th:text="${hoaDon.sdt}"></td>
+        <td th:text="${hoaDon.khachHang.hoTen}"></td>
+        <td th:text="${hoaDon.nhanVien.hoTenNV}"></td>
+        <td th:text="${hoaDon.trangThai ? 'Đã thanh toán' : 'Chưa thanh toán'}"></td>
     </tr>
     </tbody>
 </table>
+
+<div class="d-flex justify-content-center">
+    <ul class="pagination" id="pagination-placeholder">
+        <!-- Nút trang đầu -->
+        <li class="page-item" th:classappend="${hoaDonPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/hoa-don/hien-thi?page=0|}">Đầu</a>
+        </li>
+
+        <!-- Nút trang trước -->
+        <li class="page-item" th:classappend="${hoaDonPage.hasPrevious() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/hoa-don/hien-thi?page=${hoaDonPage.number - 1}|}">Trước</a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li th:each="i : ${#numbers.sequence(hoaDonPage.number,
+            (hoaDonPage.number == hoaDonPage.totalPages - 1) ? hoaDonPage.number :
+            (hoaDonPage.number + 2 > hoaDonPage.totalPages - 1 ? hoaDonPage.totalPages - 1 : hoaDonPage.number + 2))}"
+            th:classappend="${(i < 0 || i >= hoaDonPage.totalPages) ? 'disabled' : (i == hoaDonPage.number ? 'active' : '')}"
+            class="page-item">
+            <a th:href="@{|/swekle/hoa-don/hien-thi?page=${i}|}" class="page-link" th:text="${i + 1}"></a> <!-- Cộng thêm 1 để hiển thị số trang bắt đầu từ 1 -->
+        </li>
+
+        <!-- Nút trang sau -->
+        <li class="page-item" th:classappend="${hoaDonPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/hoa-don/hien-thi?page=${hoaDonPage.number + 1}|}">Sau</a>
+        </li>
+
+        <!-- Nút trang cuối -->
+        <li class="page-item" th:classappend="${hoaDonPage.hasNext() ? '' : 'disabled'}">
+            <a class="page-link" th:href="@{|/swekle/hoa-don/hien-thi?page=${hoaDonPage.totalPages - 1}|}">Cuối</a>
+        </li>
+    </ul>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Khi người dùng submit form tìm kiếm
+        $('#search-form').on('submit', function(event) {
+            event.preventDefault(); // Ngừng hành động submit mặc định
+
+            var searchQuery = $("input[name='search']").val(); // Lấy giá trị tìm kiếm
+
+            // Gửi yêu cầu AJAX để tìm kiếm
+            $.ajax({
+                url: '/swekle/hoa-don/search', // URL của yêu cầu
+                method: 'GET',
+                data: { search: searchQuery }, // Dữ liệu gửi lên server
+                success: function(response) {
+                    // Cập nhật bảng với dữ liệu tìm kiếm
+                    $('#hoa-don-table tbody').html($(response).find('#hoa-don-table tbody').html());
+                    $('#pagination-placeholder').html($(response).find('#pagination-placeholder').html());
+                },
+                error: function(xhr, status, error) {
+                    alert('Có lỗi xảy ra khi tìm kiếm: ' + error);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

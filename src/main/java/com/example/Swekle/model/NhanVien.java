@@ -53,7 +53,7 @@ public class NhanVien {
     private String email;
 
     @Column(name = "anh")
-    @NotBlank(message = "Ảnh không được để trống")
+//    @NotBlank(message = "Ảnh không được để trống")
     private String anh;
 
     @Column(name = "dia_chi")
@@ -69,7 +69,8 @@ public class NhanVien {
     private Boolean trangThai;
 
     @Column(name = "mat_khau")
-    private String mat_khau;
+    @NotBlank(message = "Mật khẩu không được để trống")
+    private String matKhau;
 
     @ManyToOne
     @JoinColumn(name = "id_chuc_vu", referencedColumnName = "id")

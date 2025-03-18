@@ -17,9 +17,6 @@
     .form-text{
         color: red;
     }
-    /*.form-control{*/
-    /*    width: 50%;*/
-    /*}*/
 
 </style>
 <body class="container">
@@ -34,7 +31,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/swekle/mau-sac/add" method="POST" th:object="${mauSac}">
+                <form id="form-id" action="/swekle/mau-sac/add" method="POST" th:object="${mauSac}">
                     <div class="mb-3">
                         <label class="form-label">Mã màu sắc</label>
                         <input type="text" class="form-control" th:field="*{maMau}">
@@ -72,7 +69,7 @@
         <input type="text" name="search" class="form-control" placeholder="Tìm kiếm màu sắc theo mã, tên">
         <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
     </div>
-
+<br>
 </form>
 <table class="table table-hover">
     <thead>
@@ -131,54 +128,5 @@
     </ul>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const addMaterialModal = document.getElementById('addMaterialModal');
-        const updateMaterialModal = document.getElementById('updateMaterialModal');
-
-        // Nếu có lỗi trong modal thêm (form-text), mở modal thêm
-        if (addMaterialModal && document.querySelectorAll(".form-text").length > 0) {
-            var modal = new bootstrap.Modal(addMaterialModal);
-            modal.show();
-        }
-
-        // Nếu có lỗi trong modal sửa (valid-feedback), mở modal sửa
-        else if (updateMaterialModal && document.querySelectorAll(".valid-feedback").length > 0) {
-            var modal = new bootstrap.Modal(updateMaterialModal);
-            modal.show();
-        }
-    });
-
-
-    //tranh mat aside
-    // Khi form được submit
-    document.getElementById('addMaterialForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Ngừng hành động mặc định (gửi form)
-
-        const formData = new FormData(this); // Lấy dữ liệu form
-
-        // Gửi yêu cầu AJAX
-        fetch(this.action, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json()) // Giả sử server trả về JSON
-            .then(data => {
-                // Xử lý dữ liệu trả về từ server (Ví dụ: hiển thị thông báo thành công)
-                console.log('Thêm màu sắc thành công!', data);
-
-                // Đóng modal sau khi thêm thành công
-                var modal = new bootstrap.Modal(document.getElementById('addMaterialModal'));
-                modal.hide();
-
-                // Cập nhật lại phần nội dung mà không reload trang
-                // (Tuỳ thuộc vào cấu trúc của bạn, bạn có thể thêm code để cập nhật nội dung trang)
-            })
-            .catch(error => {
-                console.error('Có lỗi khi thêm màu sắc:', error);
-            });
-    });
-
-</script>
 </body>
 </html>
